@@ -1,17 +1,32 @@
 class Tech
+attr_reader :cards, :effect, :name, :name_j, :cost
+	def initialize(block)
+    @cards = []
+		block.call(self)
+	end
 
-attr_reader :cards, :name, :name_j, :effects, :cost, :doc
-
-  def init
-    if @cards
-      @cards = @cards.map do |card|
-        Card.new(card)
-      end
-    else
-      @cards = []
-    end
-    @effects = [] unless @effects
+  def set_name(s)
+    @name = s
+  end
+  
+  def set_name_j(str)
+    @name_j = str
   end
 
+  def set_cost(n)
+    @cost = n
+  end
 
+  def card(&block)
+    @cards.push Card.new(block)
+  end
+
+  def set_effect(str)
+    @effect = str
+  end
+
+	def get # 値を返却するためのメソッド
+		p self
+		
+	end
 end

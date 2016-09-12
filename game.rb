@@ -3,6 +3,7 @@ class Game
 require './player'
 require './card'
 require './tech'
+require './techreader'
 require 'yaml'
 
 attr_accessor :status
@@ -10,13 +11,15 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
 
   def initialize
     @status = :title
-    @game_status = :view_tech_list
+    @game_status = :select_hand
     @game_status_memo = nil
+    @menu_status = :view_main
     @countries = [Player.new("ドイツ"), Player.new("アメリカ"), Player.new("日本"), Player.new("エジプト")]
     @player = @countries[0]
     @ranking = load_ranking
-    @tech_data = YAML.load(File.open('./tech.yml'))
-    @tech_data.each{|t|t.init}
+    techreader = TechReader.new
+    techreader.instance_eval File.read 'techdata.rb'
+    @tech_data = techreader.techarray
     @page = 0
   end
 
@@ -25,13 +28,30 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
   end
 
   def click(n)
+    if n.class == Symbol
+      click_menu(n)
+      return
+    end
     case @game_status
     when :select_hand
-      calc_sci_and_cul
+      @research = calc_research
+      @game_status = :select_tech if n == 20
     when :select_tech
-    when :view_tech_list
-
+      get_tech(n)
+      @game_status = :select_hand
+      @player.end_turn
     end
+    p @game_status
+  end
+
+  def click_menu(s)
+    case(s)
+    when :view_tech_list
+      @menu_status = :view_tech_list
+    when :view_main
+      @menu_status = :view_main
+    end
+    p @menu_status
   end
 
   def click_scroll(d)
@@ -39,20 +59,25 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     @page += 1 if d == 1
   end
 
-  def calc_sci_and_cul
-    sci = 0
-    cul = 0
+  def calc_research
+    research = 0
     @player.hand.each do |card|
       case card.name
-      when :science
-        sci += card.val
+      when :research
+        research += card.research
         all_cities.each do |city|
-          sci += 1 if city == card.dice
+          card.dice.each do |d|
+            research += 1 if city == d
+          end
         end
-      when :cul
       end
     end
-    p sci,cul
+    return research
+  end
+
+  def get_tech(n)
+    return if @tech_data.size <= n
+    @player.add_cards_to_trash(@tech_data[n].cards)
   end
 
   def all_cities

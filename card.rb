@@ -1,42 +1,78 @@
 class Card
-
-attr_reader :data, :name, :name_j, :icon, :dice, :val
-
-  def initialize(data)
-    @data = data
-    @name = data[:name]
-    @name_j = name_to_j(@name)
-    @dice = data[:dice]
-    @val = data[:val]
+attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice
+  def initialize(block)
+    @data = {}
+    @dice = []
+    @effects = []
+    block.call(self)
     @icon = @name
   end
-
-  def effect
-    if(@name == :growing)
-      return "+"+@val.to_s+"cards"
-    end
-    return nil
+  
+  def set_name(s)
+    @name = s
   end
 
-  def name_to_j(s)
-    case s
-    when :science
-      return "研究"
-    when :culture
-      return "文化"
-    when :miritary
-      return "軍隊"
-    when :training
-      return "訓練"
-    when :trading
-      return "交易"
-    when :growing
-      return "成長"
-    when :expand
-      return "拡張"
-    when :war
-      return "戦争"
+  def set_name_j(str)
+    @name_j = str
+  end
+
+  def action(&block)
+    @action = block
+  end
+
+  def draw(n)
+    n.times do
+      p "draw"
     end
+  end
+
+  def make_card(&block)
+  end
+
+  def make_great_person
+  end
+
+  def die(n)
+    @dice.push n
+  end
+
+  def power(n)
+  end
+
+  def set_culture(n)
+    @culture = n
+  end
+
+  def set_research(n)
+    @research = n
+  end
+
+  def war(n)
+  end
+
+  def remove(n)
+  end
+
+  def remove_itself(n)
+  end
+
+  def add_city
+  end
+
+  def add_action(n)
+  end
+
+  def attack(n)
+  end
+
+  def change_city
+  end
+
+  def reset_deck
+  end
+
+  def set_effect(str)
+    @effect = str
   end
 
 end
