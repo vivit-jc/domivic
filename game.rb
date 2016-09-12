@@ -28,16 +28,23 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
   end
 
   def click(n)
+    @research = @player.research(self)
     if n.class == Symbol
       click_menu(n)
       return
     end
     case @game_status
     when :select_hand
-      @research = calc_research
       @game_status = :select_tech if n == 20
     when :select_tech
-      get_tech(n)
+      if @player.has_tech?(n) || @tech_data.size <= n
+        p "already had"
+        return false
+      elsif @research < @tech_data[n].cost
+        p "research point isn't enough"
+        return false
+      end
+      @player.get_tech(n, @tech_data[n])
       @game_status = :select_hand
       @player.end_turn
     end
@@ -57,27 +64,6 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
   def click_scroll(d)
     @page -= 1 if d == 0
     @page += 1 if d == 1
-  end
-
-  def calc_research
-    research = 0
-    @player.hand.each do |card|
-      case card.name
-      when :research
-        research += card.research
-        all_cities.each do |city|
-          card.dice.each do |d|
-            research += 1 if city == d
-          end
-        end
-      end
-    end
-    return research
-  end
-
-  def get_tech(n)
-    return if @tech_data.size <= n
-    @player.add_cards_to_trash(@tech_data[n].cards)
   end
 
   def all_cities

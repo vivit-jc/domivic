@@ -1,9 +1,9 @@
 class Tech
 attr_reader :cards, :effect, :name, :name_j, :cost
-	def initialize(block)
+  def initialize(block)
     @cards = []
-		block.call(self)
-	end
+    block.call(self)
+  end
 
   def set_name(s)
     @name = s
@@ -25,8 +25,7 @@ attr_reader :cards, :effect, :name, :name_j, :cost
     @effect = str
   end
 
-	def get # 値を返却するためのメソッド
-		p self
-		
-	end
+  def get # 値を返却するためのメソッド
+    p self
+  end
 end

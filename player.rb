@@ -1,6 +1,6 @@
 class Player
 
-attr_reader :hand, :trash, :deck, :name, :cities
+attr_reader :hand, :trash, :deck, :name, :cities, :techs
 
   def initialize(name)
     @name = name
@@ -30,6 +30,7 @@ attr_reader :hand, :trash, :deck, :name, :cities
     @hand = []
     draw(5)
     @cities = [rand(6)]
+    @techs = []
   end
 
   def draw(n)
@@ -46,10 +47,35 @@ attr_reader :hand, :trash, :deck, :name, :cities
     @trash += cards
   end
 
+  def has_tech?(no)
+    @techs.include? no
+  end
+
+  def get_tech(no, tech_data)
+    @techs.push no
+    add_cards_to_trash(tech_data.cards)
+  end
+
   def end_turn
     @trash += @hand
     @hand = []
     draw(5)
+  end
+
+  def research(game)
+    research = 0
+    @hand.each do |card|
+      case card.name
+      when :research
+        research += card.research
+        game.all_cities.each do |city|
+          card.dice.each do |d|
+            research += 1 if city == d
+          end
+        end
+      end
+    end
+    return research
   end
 
 end

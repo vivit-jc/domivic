@@ -10,8 +10,10 @@ def show_main(game)
   game.player.hand.each do |e|
     print "#{e.name_j} #{e.dice[0]}, "
   end
-  print game.calc_research.to_s+"\n"
-  print game.player.trash.size.to_s + "\n"
+  print "\n"
+  print "R " + game.player.research(game).to_s
+  print " trash " + game.player.trash.size.to_s + "\n"
+  print game.player.techs.map{|t|game.tech_data[t].name_j}.to_s + "\n"
   game.click(:view_main)
 end
 
@@ -32,12 +34,15 @@ while(1)
   case buf
   when "m"
     show_main(game)
+    next
   when "s"
     show_tech_list(game)
+    next
   when "e"
     exit
   end
 
+  next unless buf =~ /[0-9]+/
   game.click(buf.to_i)
 
 end
