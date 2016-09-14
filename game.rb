@@ -96,8 +96,9 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
       call_action(@player.hand[n])
     end
     if @player.action == 0
-      @game_status = :select_tech 
-      @player.add_research(self)
+      @game_status = :select_tech
+      @player.add_research(self.all_cities)
+      @player.add_culture(self.all_cities)
     end
   end
 

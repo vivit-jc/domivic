@@ -8,6 +8,8 @@ attr_reader :hand, :trash, :deck, :name, :cities, :techs
     @deck = []
     @trash = []
     @research = 0
+    @culture = 0
+
     6.times do |i|
       @deck.push Card.new lambda { |c|
         c.set_name :research
@@ -81,13 +83,13 @@ attr_reader :hand, :trash, :deck, :name, :cities, :techs
     @action = 1
   end
 
-  def now_research(game)
+  def now_research(cities)
     research = 0
     @hand.each do |card|
       case card.name
       when :research
         research += card.research
-        game.all_cities.each do |city|
+        cities.each do |city|
           card.dice.each do |d|
             research += 1 if city == d
           end
@@ -97,12 +99,28 @@ attr_reader :hand, :trash, :deck, :name, :cities, :techs
     return research
   end
 
-  def add_research(game)
-    @research += now_research(game)
+  def add_research(cities)
+    @research += now_research(cities)
   end
 
-  def add_culture(game)
-    10
+  def now_culture(cities)
+    culture = 0
+    @hand.each do |card|
+      case card.name
+      when :culture
+        culture += card.culture
+        cities.each do |city|
+          card.dice.each do |d|
+            culture += 1 if city == d
+          end
+        end
+      end
+    end
+    return culture
+  end
+
+  def add_culture(cities)
+    @culture += now_culture(cities)
   end
 
   def power(game)

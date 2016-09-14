@@ -12,7 +12,7 @@ def show_main(game)
     print "R#{c.research} C#{c.culture} P#{c.power}\n"
   end
   print "\n"
-  print "R(#{game.player.research},#{game.player.now_research(game)})"
+  print "R(#{game.player.research},#{game.player.now_research(game.all_cities)})"
   print " C " + game.player.culture.to_s
   print " deck " + game.player.deck.size.to_s
   print " trash " + game.player.trash.size.to_s
