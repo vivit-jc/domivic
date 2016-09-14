@@ -20,6 +20,10 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice
     @action = block
   end
 
+  def get_action
+    @action
+  end
+
   def draw(n)
     n.times do
       p "draw"

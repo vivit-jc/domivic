@@ -34,19 +34,19 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
       return
     end
     case @game_status
+    # 手札（アクション）を選ぶ
     when :select_hand
-      @game_status = :select_tech if n == 20
-    when :select_tech
-      if @player.has_tech?(n) || @tech_data.size <= n
-        p "already had"
-        return false
-      elsif @research < @tech_data[n].cost
-        p "research point isn't enough"
-        return false
+      if n == 20
+        @game_status = :select_tech 
+        return
+      elsif n >= @player.hand.size
+        p "non hand"
+        return
       end
-      @player.get_tech(n, @tech_data[n])
-      @game_status = :select_hand
-      @player.end_turn
+      call_action(@player.hand[n])
+    # 技術を選ぶ
+    when :select_tech
+      select_tech(n)
     end
     p @game_status
   end
@@ -64,6 +64,30 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
   def click_scroll(d)
     @page -= 1 if d == 0
     @page += 1 if d == 1
+  end
+
+  def call_action(card)
+    return if !card.action
+    p "card"
+  end
+
+  def select_tech(n)
+    if @player.has_tech?(n)
+      p "already had"
+      return false
+    elsif n == 100
+      p "pass"
+    elsif @tech_data.size >= n
+      @player.get_tech(n, @tech_data[n])
+    elsif @research < @tech_data[n].cost
+      p "research point isn't enough"
+      return false
+    else
+      p "not found"
+      return false
+    end
+    @game_status = :select_hand
+    @player.end_turn
   end
 
   def all_cities
