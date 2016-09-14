@@ -1,9 +1,13 @@
 class Card
-attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice
+attr_writer :player
+attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice, :doc
   def initialize(block)
     @data = {}
     @dice = []
     @effects = []
+    @research = 0
+    @culture = 0
+    @power = 0
     block.call(self)
     @icon = @name
   end
@@ -16,6 +20,10 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice
     @name_j = str
   end
 
+  def set_doc(str)
+    @doc = str
+  end
+
   def action(&block)
     @action = block
   end
@@ -25,9 +33,7 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice
   end
 
   def draw(n)
-    n.times do
-      p "draw"
-    end
+    @player.draw(n)
   end
 
   def make_card(&block)
@@ -40,7 +46,8 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice
     @dice.push n
   end
 
-  def power(n)
+  def set_power(n)
+    @power = n
   end
 
   def set_culture(n)
@@ -49,6 +56,14 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice
 
   def set_research(n)
     @research = n
+  end
+
+  def add_culture(n)
+    @player.culture += n
+  end
+
+  def add_research(n)
+    @player.research += n
   end
 
   def war(n)

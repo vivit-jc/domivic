@@ -28,7 +28,6 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
   end
 
   def click(n)
-    @research = @player.research(self)
     if n.class == Symbol
       click_menu(n)
       return
@@ -36,14 +35,7 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     case @game_status
     # 手札（アクション）を選ぶ
     when :select_hand
-      if n == 20
-        @game_status = :select_tech 
-        return
-      elsif n >= @player.hand.size
-        p "non hand"
-        return
-      end
-      call_action(@player.hand[n])
+      select_hand(n)
     # 技術を選ぶ
     when :select_tech
       select_tech(n)
@@ -67,8 +59,8 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
   end
 
   def call_action(card)
-    return if !card.action
-    p "card"
+    card.get_action.call
+    @player.action -= 1
   end
 
   def select_tech(n)
@@ -77,17 +69,36 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
       return false
     elsif n == 100
       p "pass"
-    elsif @tech_data.size >= n
-      @player.get_tech(n, @tech_data[n])
-    elsif @research < @tech_data[n].cost
+    elsif @tech_data.size <= n
+      p "not found"
+      return
+    elsif @player.research < @tech_data[n].cost
       p "research point isn't enough"
       return false
     else
-      p "not found"
-      return false
+      @player.get_tech(n, @tech_data[n])
     end
     @game_status = :select_hand
     @player.end_turn
+  end
+
+  def select_hand(n)
+    if n == 20
+      p "pass"
+      @player.action = 0
+    elsif n >= @player.hand.size
+      p "non hand"
+      return
+    elsif !@player.hand[n].get_action
+      p "non action"
+      return
+    else
+      call_action(@player.hand[n])
+    end
+    if @player.action == 0
+      @game_status = :select_tech 
+      @player.add_research(self)
+    end
   end
 
   def all_cities
