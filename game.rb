@@ -39,8 +39,9 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     # 技術を選ぶ
     when :select_tech
       select_tech(n)
+    when :select_remove_card
+      select_remove_hand(n)
     end
-    p @game_status
   end
 
   def click_menu(s)
@@ -50,7 +51,6 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     when :view_main
       @menu_status = :view_main
     end
-    p @menu_status
   end
 
   def click_scroll(d)
@@ -58,9 +58,13 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     @page += 1 if d == 1
   end
 
-  def call_action(card)
-    card.get_action.call
+  def call_action(n)
+    @player.hand[n].get_action.call
+    if @player.remove_count > 0
+      @game_status = :select_remove_card
+    end
     @player.action -= 1
+    @player.discard(n)
   end
 
   def select_tech(n)
@@ -93,12 +97,23 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
       p "non action"
       return
     else
-      call_action(@player.hand[n])
+      call_action(n)
     end
-    if @player.action == 0
+    if @player.action == 0 && @player.remove_count == 0
       @game_status = :select_tech
       @player.add_research(self.all_cities)
       @player.add_culture(self.all_cities)
+    end
+  end
+
+  def select_remove_hand(n)
+    @player.remove_count -= 1
+    @player.remove(n)
+    return if @player.remove_count > 0
+    if @player.action > 0
+      @game_status = :select_hand
+    else
+      @game_status = :select_tech
     end
   end
 

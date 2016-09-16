@@ -1,14 +1,16 @@
 class Player
 
-attr_accessor :action, :research, :culture
-attr_reader :hand, :trash, :deck, :name, :cities, :techs
+attr_accessor :action, :research, :culture, :remove_count
+attr_reader :hand, :trash, :deck, :removed, :name, :cities, :techs
 
   def initialize(name)
     @name = name
     @deck = []
     @trash = []
+    @removed = []
     @research = 0
     @culture = 0
+    @remove_count = 0
 
     6.times do |i|
       @deck.push Card.new lambda { |c|
@@ -81,6 +83,16 @@ attr_reader :hand, :trash, :deck, :name, :cities, :techs
     @hand = []
     draw(5)
     @action = 1
+  end
+
+  def discard(n)
+    card = @hand.delete_at n
+    @trash.push card
+  end
+
+  def remove(n)
+    card = @hand.delete_at n
+    @removed.push card
   end
 
   def now_research(cities)

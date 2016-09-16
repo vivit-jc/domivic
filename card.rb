@@ -70,6 +70,8 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice, 
   end
 
   def remove(n)
+    p "remove #{n}"
+    @player.remove_count = n
   end
 
   def remove_itself(n)
@@ -85,6 +87,13 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice, 
   end
 
   def change_city
+  end
+
+  def discard
+  end
+
+  def remove_it
+
   end
 
   def reset_deck
