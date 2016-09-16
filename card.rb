@@ -1,6 +1,6 @@
 class Card
 attr_writer :player
-attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice, :doc
+attr_reader :effect, :power, :attack, :defense, :culture, :research, :name, :name_j, :icon, :dice, :doc
   def initialize(block)
     @data = {}
     @dice = []
@@ -8,6 +8,8 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice, 
     @research = 0
     @culture = 0
     @power = 0
+    @attack = 0
+    @defense = 0
     block.call(self)
     @icon = @name
   end
@@ -70,20 +72,23 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice, 
   end
 
   def remove(n)
-    p "remove #{n}"
     @player.remove_count = n
   end
 
-  def remove_itself(n)
+  def remove_itself
+    @player.remove_target(self)
   end
 
   def add_city
+    @player.cities.push rand(6)
   end
 
   def add_action(n)
+    @player.action += n
   end
 
-  def attack(n)
+  def set_attack(n)
+    @attack = n
   end
 
   def change_city
@@ -92,11 +97,8 @@ attr_reader :effect, :power, :culture, :research, :name, :name_j, :icon, :dice, 
   def discard
   end
 
-  def remove_it
-
-  end
-
   def reset_deck
+    @player.reset_deck
   end
 
   def set_effect(str)

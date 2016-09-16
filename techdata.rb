@@ -115,16 +115,15 @@ initdata do |tech|
   tech.card do |c|
     c.set_name :trading
     c.set_name_j "交易"
-    c.set_doc ":res:2,:cul:1,action 1"
+    c.set_doc ":res:2,:cul:1,draw 1,action 1"
     c.action do 
       c.add_action 1
       c.add_research 2
       c.add_culture 1
+      c.draw 1
     end
   end
 end
-
-
 
 initdata do |tech|
   tech.set_name :masonry
@@ -147,7 +146,7 @@ initdata do |tech|
         mc.set_name :military
         mc.set_name_j "剣士"
         mc.set_power 2
-        mc.attack 1
+        mc.set_attack 1
       end
     end
   end
@@ -238,7 +237,7 @@ initdata do |tech|
         mc.set_name :military
         mc.set_name_j "騎士"
         mc.set_power 3
-        mc.attack 2
+        mc.set_attack 2
       end
     end
   end
@@ -297,7 +296,7 @@ initdata do |tech|
         mc.set_name :military
         mc.set_name_j "カタパルト"
         mc.set_power 2
-        mc.attack 5
+        mc.set_attack 5
       end
     end
   end

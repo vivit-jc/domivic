@@ -1,15 +1,18 @@
 class Player
 
-attr_accessor :action, :research, :culture, :remove_count
-attr_reader :hand, :trash, :deck, :removed, :name, :cities, :techs
+attr_accessor :action, :research, :culture, :remove_count, :cities
+attr_reader :hand, :trash, :deck, :removed, :name, :techs, :war, :power
+attr_writer :opponents
 
   def initialize(name)
     @name = name
     @deck = []
     @trash = []
     @removed = []
+    @opponents = []
     @research = 0
     @culture = 0
+    @war = 0
     @remove_count = 0
 
     6.times do |i|
@@ -95,6 +98,17 @@ attr_reader :hand, :trash, :deck, :removed, :name, :cities, :techs
     @removed.push card
   end
 
+  # 手札から引数と一致するカードを除外する(remove_itselfで使う)
+  def remove_target(card)
+    rm = @hand.delete card
+    @removed.push rm
+  end
+
+  def reset_deck
+    @trash += @deck
+    @deck = []
+  end
+
   def now_research(cities)
     research = 0
     @hand.each do |card|
@@ -135,8 +149,20 @@ attr_reader :hand, :trash, :deck, :removed, :name, :cities, :techs
     @culture += now_culture(cities)
   end
 
-  def power(game)
-    2
+  def attack
+    power = 0
+    @hand.each do |c|
+      next unless c.name == :military
+      power += c.power + c.attack
+    end
+  end
+
+  def defense
+    power = 0
+    @hand.each do |c|
+      next unless c.name == :military
+      power += c.power + c.defense
+    end
   end
 
 end
