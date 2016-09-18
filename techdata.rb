@@ -1,3 +1,5 @@
+# coding: utf-8
+
 initdata do |tech|
   tech.set_name :celeremoal_burial
   tech.set_name_j "埋葬"

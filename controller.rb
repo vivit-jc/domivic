@@ -36,7 +36,13 @@ class Controller
   def click_on_game
     case @game.game_status
     when :select_hand
-      return false if pos_hand < 0 && !pos_hand_cancel?
+      return false if pos_hand < 0
+      @game.click(pos_hand)
+    when :select_tech
+      return false if pos_tech < 0
+      @game.click(pos_tech)
+    when :select_remove_hand
+      return false if pos_hand < 0 || pos_hand_pass?
       @game.click(pos_hand)
     when :view_tech_list
       @game.click_scroll(pos_tech_scroll) if pos_tech_scroll != -1
@@ -54,10 +60,11 @@ class Controller
     @game.player.hand.size.times do |i|
       return i if(mcheck(HAND_X+(CARD_W+4)*i,HAND_Y,HAND_X+CARD_W+(CARD_W+4)*i,HAND_Y+CARD_H))
     end
+    return 20 if pos_hand_pass?
     return -1
   end
 
-  def pos_hand_cancel?
+  def pos_hand_pass?
     return mcheck(HAND_X,HAND_Y-44,HAND_X+CARD_W,HAND_Y-4)
   end
 
@@ -75,6 +82,9 @@ class Controller
     return 0 if mcheck(35,240,35+Font16.get_width("←"),256)
     return 1 if mcheck(605,240,605+Font16.get_width("→"),256)
     return -1
+  end
+
+  def pos_tech_pass?
   end
 
   def pos_return

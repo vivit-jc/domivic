@@ -1,7 +1,9 @@
 class Tech
-attr_reader :cards, :effect, :name, :name_j, :cost
+attr_reader :cards, :effects, :name, :name_j, :cost, :doc
   def initialize(block)
     @cards = []
+    @effects = []
+    @doc = ""
     block.call(self)
   end
 
@@ -22,7 +24,7 @@ attr_reader :cards, :effect, :name, :name_j, :cost
   end
 
   def set_effect(str)
-    @effect = str
+    @effects.push str
   end
 
   def get # 値を返却するためのメソッド

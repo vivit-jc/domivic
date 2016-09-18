@@ -19,6 +19,7 @@ attr_writer :opponents
       @deck.push Card.new lambda { |c|
         c.set_name :research
         c.set_name_j "研究"
+        c.set_doc ""
         c.set_research 1
         c.die i
       }

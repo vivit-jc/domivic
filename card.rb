@@ -4,6 +4,7 @@ attr_reader :effect, :power, :attack, :defense, :culture, :research, :name, :nam
   def initialize(block)
     @data = {}
     @dice = []
+    @doc = ""
     @effects = []
     @research = 0
     @culture = 0
@@ -28,6 +29,10 @@ attr_reader :effect, :power, :attack, :defense, :culture, :research, :name, :nam
 
   def action(&block)
     @action = block
+  end
+
+  def has_action?
+    return @action != nil
   end
 
   def get_action
