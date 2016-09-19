@@ -156,6 +156,7 @@ attr_writer :opponents
       next unless c.name == :military
       power += c.power + c.attack
     end
+    return power
   end
 
   def defense
@@ -164,6 +165,30 @@ attr_writer :opponents
       next unless c.name == :military
       power += c.power + c.defense
     end
+    return power
+  end
+
+  def war(n)
+    @opponents.each do |o|
+      if @attack > o.defense
+        o.calc_war(-n)
+        calc_war(n)
+      else
+        o.calc_war(n)
+        calc_war(-n)
+    end
+  end
+
+  def calc_war(n)
+    @war += n
+  end
+
+  def score
+    res = @techs.size * 2
+    res += @techs.size if @techs.include?(:mathematics.to_techno)
+    cul = @culture
+    war = @war
+    return [res+cul+war,res,cul,war]
   end
 
 end

@@ -14,6 +14,7 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     @game_status_memo = nil
     @menu_status = :view_main
     @countries = [Player.new("ドイツ"), Player.new("アメリカ"), Player.new("日本"), Player.new("エジプト")]
+    set_opponents
     @player = @countries[0]
     @ranking = load_ranking
     techreader = TechReader.new
@@ -110,11 +111,16 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     @player.remove_count -= 1
     @player.remove(n)
     @game_status = :select_hand if @player.remove_count == 0
-      
   end
 
   def all_cities
     return @countries.map{|c|c.cities}.flatten
+  end
+
+  def set_opponents
+    @countries.each do |c|
+      c.opponents = @countries - [c]
+    end
   end
 
   def go_title

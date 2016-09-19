@@ -84,6 +84,7 @@ class View
       @countries[i].cities.each do |city|
         Window.draw(c[0]+3, c[1]+22, @dice[city])
       end
+        Window.drawFont(c[0]+2, c[1]+62, "#{@countries[i].score[0]} (R#{@countries[i].score[1]} C#{@countries[i].score[2]} W#{@countries[i].score[3]})", Font16)
       if i == 0 # とりあえずプレイヤーだけ表示
         Window.draw(c[0]+3, c[1]+42, @research)
         Window.drawFont(c[0]+60, c[1]+2, "action #{@player.action}", Font16)

@@ -74,6 +74,7 @@ attr_reader :effect, :power, :attack, :defense, :culture, :research, :name, :nam
   end
 
   def war(n)
+    @player.war(n)
   end
 
   def remove(n)
