@@ -20,6 +20,10 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     techreader = TechReader.new
     techreader.instance_eval File.read 'techdata.rb'
     @tech_data = techreader.techarray
+    @countries.each do |c|
+      c.techlist = @tech_data.map.with_index{|t,i|[t.name, i]}.flatten
+      c.techlist = Hash[*c.techlist]
+    end
     @page = 0
   end
 

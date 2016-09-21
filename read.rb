@@ -18,6 +18,7 @@ def show_main(game)
   print " trash " + game.player.trash.size.to_s
   print " removed " + game.player.removed.size.to_s
   print " action " + game.player.action.to_s + "\n"
+  print game.player.score.to_s + "\n"
   print game.player.techs.map{|t|game.tech_data[t].name_j}.to_s + "\n"
   game.click(:view_main)
 end
@@ -49,7 +50,6 @@ while(1)
 
   next unless buf =~ /[0-9]+/
   game.click(buf.to_i)
-  p game.game_status
 
 
 end

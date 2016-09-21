@@ -1,6 +1,6 @@
 class Player
 
-attr_accessor :action, :research, :culture, :remove_count, :cities
+attr_accessor :action, :research, :culture, :remove_count, :cities, :techlist
 attr_reader :hand, :trash, :deck, :removed, :name, :techs, :war, :power
 attr_writer :opponents
 
@@ -14,6 +14,7 @@ attr_writer :opponents
     @culture = 0
     @war = 0
     @remove_count = 0
+    @techlist = []
 
     6.times do |i|
       @deck.push Card.new lambda { |c|
@@ -170,12 +171,13 @@ attr_writer :opponents
 
   def war(n)
     @opponents.each do |o|
-      if @attack > o.defense
+      if attack > o.defense
         o.calc_war(-n)
         calc_war(n)
       else
         o.calc_war(n)
         calc_war(-n)
+      end
     end
   end
 
@@ -185,7 +187,7 @@ attr_writer :opponents
 
   def score
     res = @techs.size * 2
-    res += @techs.size if @techs.include?(:mathematics.to_techno)
+    res += @techs.size if @techs.include?(@techlist[:mathematics])
     cul = @culture
     war = @war
     return [res+cul+war,res,cul,war]
