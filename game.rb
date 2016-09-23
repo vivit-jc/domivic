@@ -4,6 +4,7 @@ require './player'
 require './card'
 require './tech'
 require './techreader'
+require './great_person'
 
 attr_accessor :status
 attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :page

@@ -44,9 +44,12 @@ attr_reader :effect, :power, :attack, :defense, :culture, :research, :name, :nam
   end
 
   def make_card(&block)
+    @player.trash.push Card.new(block)
   end
 
   def make_great_person
+    person_type = [:artist, :scientist, :engineer, :merchant, :general].sample
+    @player.trash.push GreatPerson.new(person_type)
   end
 
   def die(n)
