@@ -86,7 +86,7 @@ attr_writer :opponents
   def end_turn
     @trash += @hand
     @hand = []
-    draw(5)
+    draw(4+@cities.size)
     @action = 1
   end
 

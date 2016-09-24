@@ -39,13 +39,23 @@ class Controller
       return false if pos_hand < 0
       @game.click(pos_hand)
     when :select_tech
-      return false if pos_tech < 0
-      @game.click(pos_tech)
+      click_on_select_tech
     when :select_remove_hand
       return false if pos_hand < 0 || pos_hand_pass?
       @game.click(pos_hand)
     when :view_tech_list
       @game.click_scroll(pos_tech_scroll) if pos_tech_scroll != -1
+    end
+  end
+
+  def click_on_select_tech
+    if pos_tech_scroll != -1
+      @game.click_scroll(pos_tech_scroll)
+    elsif pos_tech_pass?
+      @game.click(100)
+    elsif pos_tech < 0
+    else
+      @game.click(pos_tech)
     end
   end
 
@@ -79,12 +89,13 @@ class Controller
   end
 
   def pos_tech_scroll
-    return 0 if mcheck(35,240,35+Font16.get_width("←"),256)
-    return 1 if mcheck(605,240,605+Font16.get_width("→"),256)
+    return 0 if mcheck(35,240,51,256)
+    return 1 if mcheck(605,240,621,256)
     return -1
   end
 
   def pos_tech_pass?
+    mcheck(TECH_X+(TECH_W+3)*2,TECH_Y+(TECH_H+6)*2,TECH_X+(TECH_W)*3+6,TECH_Y+(TECH_H+6)*2+30)
   end
 
   def pos_return

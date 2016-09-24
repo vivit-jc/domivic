@@ -17,6 +17,9 @@ class View
     @diplomacy = Image.load("./img/handshake.png")
     @arrow = Image.load("./img/arrow.png")
     @done = Image.load("./img/done-tick.png")
+    @right = Image.load("./img/right-arrow.png")
+    @left = Image.load("./img/left-arrow.png")
+    
     @dice = [Image.load("./img/dice_1.png"),Image.load("./img/dice_2.png"),Image.load("./img/dice_3.png"),
       Image.load("./img/dice_4.png"),Image.load("./img/dice_5.png"),Image.load("./img/dice_6.png")]
     @player = game.player
@@ -65,6 +68,10 @@ class View
   def draw_hand
     @player.hand.each_with_index do |card,i|
       p = calc_pos_hand(i)
+      if @controller.pos_hand == i
+        p[1] -= 6
+        p[3] -= 6
+      end
       draw_box(p[0],p[1],p[2],p[3],WHITE)
       Window.drawFont(p[0]+3,p[1]+3,card.name_j,Font16)
       Window.draw(p[0]+2,p[1]+23,eval("@"+card.icon.to_s))
@@ -73,7 +80,14 @@ class View
     end
     draw_box(HAND_X,HAND_Y-30,HAND_X+CARD_W,HAND_Y-4,WHITE)
     Window.drawFont(HAND_X+10,HAND_Y-26,"パス",Font16)
-    draw_hand_doc(@controller.pos_hand) if @controller.pos_hand >= 0 && @controller.pos_hand != 20
+    if @controller.pos_hand >= 0 && @controller.pos_hand != 20
+      draw_hand_doc(@controller.pos_hand)
+    end
+    if @game.game_status != :select_remove_hand
+      Window.drawFont(HAND_X, HAND_Y-55, "action 残り#{@player.action}", Font16)
+    else
+      Window.drawFont(HAND_X, HAND_Y-55, "remove 残り#{@player.remove_count}", Font16) 
+    end
   end
 
   def draw_countries
@@ -81,14 +95,22 @@ class View
       c = COUNTRIES[i]
       draw_box(c[0], c[1], c[2], c[3], WHITE)
       Window.drawFont(c[0]+2, c[1]+2, @countries[i].name, Font16)
-      @countries[i].cities.each do |city|
-        Window.draw(c[0]+3, c[1]+22, @dice[city])
+      @countries[i].cities.each_with_index do |city,i|
+        Window.draw(c[0]+3+i*18, c[1]+22, @dice[city])
       end
-        Window.drawFont(c[0]+2, c[1]+62, "#{@countries[i].score[0]} (R#{@countries[i].score[1]} C#{@countries[i].score[2]} W#{@countries[i].score[3]})", Font16)
+      Window.drawFont(c[0]+2, c[1]+62, "score #{@countries[i].score[0]}", Font16)
+      Window.drawFont(c[0]+86, c[1]+62, "#{@countries[i].score[1]}", Font16)
+      Window.drawFont(c[0]+126, c[1]+62, "#{@countries[i].score[2]}", Font16)
+      Window.drawFont(c[0]+168, c[1]+62, "#{@countries[i].score[3]}", Font16)
+      
+      Window.draw(c[0]+70, c[1]+62, @research)
+      Window.draw(c[0]+110, c[1]+62, @culture)
+      Window.draw(c[0]+150, c[1]+62, @war)
+
       if i == 0 # とりあえずプレイヤーだけ表示
         Window.draw(c[0]+3, c[1]+42, @research)
-        Window.drawFont(c[0]+60, c[1]+2, "action #{@player.action}", Font16)
-        str = "#{@player.research}(+#{@player.now_research(@game.all_cities)}) deck #{@player.deck.size} trash #{@player.trash.size} rm #{@player.removed.size}"
+
+        str = "#{@player.research}(+#{@player.now_research(@game.all_cities)}) 山 #{@player.deck.size} 捨 #{@player.trash.size} 除 #{@player.removed.size}"
         Window.drawFont(c[0]+20, c[1]+42, str, Font16)
       end
     end
@@ -101,16 +123,14 @@ class View
     end
     5.times do |i|
       break if @game.tech_data.size <= 5+i+@game.page*10
-
       draw_tech(5+i+@game.page*10, TECH_X+(i*TECH_W+6), TECH_Y+TECH_H+5)
     end
-    
-    fonthash = {}
-    fonthash = {color: YELLOW} if(@controller.pos_tech_scroll == 0)
-    Window.drawFont(35, 240, "←", Font16,fonthash) if @game.page > 0
-    fonthash = {}
-    fonthash = {color: YELLOW} if(@controller.pos_tech_scroll == 1)
-    Window.drawFont(605, 240, "→", Font16,fonthash) if @game.page < @game.tech_data.size/10
+    Window.draw(35, 240, @left) if @game.page > 0
+    Window.draw(605, 240, @right) if @game.page < @game.tech_data.size/10
+    if @game.game_status == :select_tech
+      draw_box(TECH_X+(TECH_W+3)*2,TECH_Y+(TECH_H+6)*2,TECH_X+(TECH_W)*3,TECH_Y+(TECH_H+6)*2+30, WHITE)
+      Window.drawFont(TECH_X+(TECH_W+3)*2+34, TECH_Y+(TECH_H+6)*2+8, "パス", Font16)
+    end
   end
 
   def draw_tech(n,x,y)
@@ -119,7 +139,7 @@ class View
     color = RED if tech.cost > @player.research
     if @player.techs.include?(n)
       color = GREEN
-      Window.draw(x+82, y+70, @done)
+      Window.draw(x+75, y+70, @done)
     end
     draw_box(x, y, x+TECH_W-6, y+TECH_H, color)
     Window.drawFont(x+3, y+3, tech.name_j, Font16)

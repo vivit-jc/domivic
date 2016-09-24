@@ -43,6 +43,7 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
       select_hand(n)
     # 技術を選ぶ
     when :select_tech
+
       select_tech(n)
     when :select_remove_hand
       select_remove_hand(n)
@@ -60,8 +61,9 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
   end
 
   def click_scroll(d)
-    @page -= 1 if d == 0
-    @page += 1 if d == 1
+    @page -= 1 if d == 0 && @page > 0
+    @page += 1 if d == 1 && @page <= @tech_data.size/10-1
+    p @page
   end
 
   def call_action(n)
