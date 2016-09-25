@@ -1,6 +1,7 @@
 class Game
 
 require './player'
+require './computer'
 require './card'
 require './tech'
 require './techreader'
@@ -14,7 +15,7 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     @game_status = :select_hand
     @game_status_memo = nil
     @menu_status = :view_main
-    @countries = [Player.new("ドイツ"), Player.new("アメリカ"), Player.new("日本"), Player.new("エジプト")]
+    @countries = [Player.new("ドイツ"), Computer.new("アメリカ"), Computer.new("日本"), Computer.new("エジプト")]
     set_opponents
     @player = @countries[0]
     @ranking = load_ranking
@@ -25,6 +26,7 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
       c.techlist = @tech_data.map.with_index{|t,i|[t.name, i]}.flatten
       c.techlist = Hash[*c.techlist]
     end
+    @com_log = []
     @page = 0
   end
 
@@ -90,8 +92,8 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     else
       @player.get_tech(n, @tech_data[n])
     end
-    @game_status = :select_hand
-    @player.end_turn
+
+    end_player_turn
   end
 
   def select_hand(n)
@@ -118,6 +120,16 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     @player.remove_count -= 1
     @player.remove(n)
     @game_status = :select_hand if @player.remove_count == 0
+  end
+
+  def end_player_turn
+    @game_status = :select_hand
+    @player.end_turn
+    @countries.each do |c|
+      next if c == @player
+      @com_log << c.thinking
+    end
+    p @com_log
   end
 
   def all_cities
