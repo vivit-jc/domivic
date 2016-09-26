@@ -127,7 +127,7 @@ attr_reader :game_status, :game_status_memo, :player, :countries, :tech_data, :p
     @player.end_turn
     @countries.each do |c|
       next if c == @player
-      @com_log << c.thinking
+      @com_log << c.thinking(@tech_data)
     end
     p @com_log
   end
