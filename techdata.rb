@@ -183,7 +183,7 @@ end
 initdata do |tech|
   tech.set_name :monarchy
   tech.set_name_j "君主制"
-  tech.set_cost 3
+  tech.set_cost 12
   tech.set_type [:growing]
   tech.card do |c|
     c.set_name :crown
@@ -196,9 +196,25 @@ initdata do |tech|
 end
 
 initdata do |tech|
+  tech.set_name :navigation
+  tech.set_name_j "航海術"
+  tech.set_cost 15
+  tech.set_type [:growing]
+  tech.card do |c|
+    c.set_name :trading
+    c.set_name_j "交易"
+    c.set_doc ":cul:3,action 1"
+    c.action do 
+      c.add_culture 3
+      c.add_action 1
+    end
+  end
+end
+
+initdata do |tech|
   tech.set_name :mathematics
   tech.set_name_j "数学"
-  tech.set_cost 3
+  tech.set_cost 15
   tech.set_type [:science]
   tech.card do |c|
     c.set_name :research
@@ -215,7 +231,7 @@ end
 initdata do |tech|
   tech.set_name :laws
   tech.set_name_j "法律"
-  tech.set_cost 7
+  tech.set_cost 18
   tech.set_type [:growing]
   tech.card do |c|
     c.set_name :crown
@@ -239,7 +255,7 @@ end
 initdata do |tech|
   tech.set_name :chivalry
   tech.set_name_j "騎士道"
-  tech.set_cost 3
+  tech.set_cost 18
   tech.set_type [:war]
   tech.card do |c|
     c.set_name :training
@@ -268,7 +284,7 @@ end
 initdata do |tech|
   tech.set_name :irrigation
   tech.set_name_j "灌漑"
-  tech.set_cost 3
+  tech.set_cost 20
   tech.set_type [:growing]
   tech.card do |c|
     c.set_name :growing
@@ -291,7 +307,7 @@ end
 initdata do |tech|
   tech.set_name :engineering
   tech.set_name_j "工学"
-  tech.set_cost 3
+  tech.set_cost 25
   tech.set_type [:growing]
   tech.card do |c|
     c.set_name :expand
@@ -321,7 +337,7 @@ end
 initdata do |tech|
   tech.set_name :philosophy
   tech.set_name_j "哲学"
-  tech.set_cost 3
+  tech.set_cost 25
   tech.set_type [:culture]
   tech.card do |c|
     c.set_name :culture
@@ -335,25 +351,9 @@ initdata do |tech|
 end
 
 initdata do |tech|
-  tech.set_name :navigation
-  tech.set_name_j "航海術"
-  tech.set_cost 3
-  tech.set_type [:growing]
-  tech.card do |c|
-    c.set_name :trading
-    c.set_name_j "交易"
-    c.set_doc ":cul:3,action 1"
-    c.action do 
-      c.add_culture 3
-      c.add_action 1
-    end
-  end
-end
-
-initdata do |tech|
   tech.set_name :diplomacy
   tech.set_name_j "外交"
-  tech.set_cost 3
+  tech.set_cost 30
   tech.set_type [:growing]
   tech.card do |c|
     c.set_name :diplomacy
@@ -368,7 +368,7 @@ end
 initdata do |tech|
   tech.set_name :democracy
   tech.set_name_j "民主主義"
-  tech.set_cost 3
+  tech.set_cost 30
   tech.set_type [:growing]
   tech.card do |c|
     c.set_name :crown
@@ -383,7 +383,7 @@ end
 initdata do |tech|
   tech.set_name :bureaucracy
   tech.set_name_j "官僚制"
-  tech.set_cost 3
+  tech.set_cost 36
   tech.set_type [:growing]
   tech.card do |c|
     c.set_name :expand

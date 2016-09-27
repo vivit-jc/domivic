@@ -1,5 +1,5 @@
 class Tech
-attr_reader :cards, :effects, :name, :name_j, :cost, :doc
+attr_reader :cards, :effects, :name, :name_j, :cost, :doc, :typearray
   def initialize(block)
     @cards = []
     @effects = []
@@ -10,7 +10,11 @@ attr_reader :cards, :effects, :name, :name_j, :cost, :doc
   def set_name(s)
     @name = s
   end
-  
+
+  def set_type(array)
+    @typearray = array
+  end
+
   def set_name_j(str)
     @name_j = str
   end
