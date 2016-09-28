@@ -23,14 +23,25 @@ class Computer < Player
   def select_tech(tech_data)
     techarray = tech_data.select{|t|t.cost <= @research}.map do |tech|
       if tech.typearray[0] == @ai_type
-        {tech.name => tech.cost * 2}
+        [tech.name => tech.cost * 2}
       else
         {tech.name => tech.cost }
       end
     end
+    @techlist.map{|t|tech_data[t].name}.each do |tname|
+      techarray.reject!{|tech|tech.to_a[0] == tname}
+    end
     techarray.sort! {|(k1, v1), (k2, v2)| v2 <=> v1 }
-    p techarray[-1][0],techarray[-2][0]
-    #if techarray[-1][1] techarray[-2][1]
+    if techarray.size == 0
+    elsif techarray.size >= 2 && techarray[-1].to_a[1] == techarray[-2].to_a[1]
+      tech = [techarray[-1], techarray[-2]].sample
+    else
+      tech = techarray[-1]
+    end
+    tech_data.each_with_index do |t,no|
+      tech_no = no 
+    end
+    get_tech()
   end
 
 end
